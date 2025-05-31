@@ -1,7 +1,8 @@
 # Backend Documentation
 
-## User Registration API
+## User API Endpoints
 
+### 1. User Registration
 ## Endpoint: `/users/register`
 
 ### Description
@@ -107,10 +108,9 @@ This endpoint allows users to register a new account in the system. It validates
 - The password is automatically hashed before being stored in the database
 - A JWT token is generated upon successful registration
 - The password field is not returned in the response for security reasons
-- The endpoint uses express-validator for input validation 
+- The endpoint uses express-validator for input validation
 
-## User Login API
-
+### 2. User Login
 ## Endpoint: `/users/login`
 
 ### Description
@@ -192,5 +192,106 @@ or
 ### Notes
 - The endpoint validates the user's credentials against the stored hashed password
 - A JWT token is generated upon successful login
+- The token is stored in an HTTP-only cookie for security
 - The password field is not returned in the response for security reasons
-- The endpoint uses express-validator for input validation 
+- The endpoint uses express-validator for input validation
+
+### 3. Get User Profile
+## Endpoint: `/users/profile`
+
+### Description
+This endpoint retrieves the authenticated user's profile information.
+
+### Method
+`GET`
+
+### Headers
+- `Authorization`: Bearer token (required)
+- `Cookie`: token (optional, if using cookie-based authentication)
+
+### Response
+
+#### Success Response (200 OK)
+```json
+{
+    "_id": "user_id",
+    "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+}
+```
+
+#### Error Responses
+
+1. **Authentication Error (401 Unauthorized)**
+```json
+{
+    "message": "Unauthorized access - No token provided"
+}
+```
+or
+```json
+{
+    "message": "Invalid token"
+}
+```
+or
+```json
+{
+    "message": "Token has expired"
+}
+```
+
+### Status Codes
+- `200`: Profile retrieved successfully
+- `401`: Unauthorized (invalid or missing token)
+- `500`: Internal server error
+
+### Notes
+- Requires authentication (valid JWT token)
+- The password field is not returned in the response
+- Token can be provided via Authorization header or cookie
+
+### 4. User Logout
+## Endpoint: `/users/logout`
+
+### Description
+This endpoint logs out the user by invalidating their current session token.
+
+### Method
+`POST`
+
+### Headers
+- `Authorization`: Bearer token (required)
+- `Cookie`: token (optional, if using cookie-based authentication)
+
+### Response
+
+#### Success Response (200 OK)
+```json
+{
+    "message": "User Logged-out!!"
+}
+```
+
+#### Error Responses
+
+1. **Authentication Error (401 Unauthorized)**
+```json
+{
+    "message": "Unauthorized access - No token provided"
+}
+```
+
+### Status Codes
+- `200`: Logout successful
+- `401`: Unauthorized (if no valid token provided)
+- `500`: Internal server error
+
+### Notes
+- The endpoint clears the authentication cookie
+- The current token is blacklisted to prevent its reuse
+- Requires authentication (valid JWT token)
+- Token can be provided via Authorization header or cookie 
