@@ -1,6 +1,6 @@
 # Backend Documentation
 
-# User Registration API Documentation
+#3 User Registration API
 
 ## Endpoint: `/users/register`
 
@@ -106,5 +106,91 @@ This endpoint allows users to register a new account in the system. It validates
 ### Notes
 - The password is automatically hashed before being stored in the database
 - A JWT token is generated upon successful registration
+- The password field is not returned in the response for security reasons
+- The endpoint uses express-validator for input validation 
+
+#4 User Login API
+
+## Endpoint: `/users/login`
+
+### Description
+This endpoint authenticates users and provides them with a JWT token for subsequent authenticated requests.
+
+### Method
+`POST`
+
+### Request Body
+```json
+{
+    "email": "john.doe@example.com",
+    "password": "yourpassword"
+}
+```
+
+### Field Validations
+
+#### Email
+- Required
+- Must be a valid email format
+- Minimum length: 5 characters
+- Maximum length: 30 characters
+
+#### Password
+- Required
+- Minimum length: 4 characters
+- Maximum length: 20 characters
+
+### Response
+
+#### Success Response (200 OK)
+```json
+{
+    "token": "jwt_token",
+    "user": {
+        "_id": "user_id",
+        "fullname": {
+            "firstname": "John",
+            "lastname": "Doe"
+        },
+        "email": "john.doe@example.com"
+    }
+}
+```
+
+#### Error Responses
+
+1. **Validation Error (400 Bad Request)**
+```json
+{
+    "errors": [
+        {
+            "msg": "Invalid email"
+        }
+    ]
+}
+```
+
+2. **Authentication Error (401 Unauthorized)**
+```json
+{
+    "message": "Invalid Email or Password"
+}
+```
+or
+```json
+{
+    "message": "Password does not match"
+}
+```
+
+### Status Codes
+- `200`: Login successful
+- `400`: Validation error in request data
+- `401`: Invalid credentials
+- `500`: Internal server error
+
+### Notes
+- The endpoint validates the user's credentials against the stored hashed password
+- A JWT token is generated upon successful login
 - The password field is not returned in the response for security reasons
 - The endpoint uses express-validator for input validation 
