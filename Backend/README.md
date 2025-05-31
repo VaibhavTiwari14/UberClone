@@ -1,6 +1,6 @@
 # Backend Documentation
 
-#3 User Registration API
+## User Registration API
 
 ## Endpoint: `/users/register`
 
@@ -109,7 +109,7 @@ This endpoint allows users to register a new account in the system. It validates
 - The password field is not returned in the response for security reasons
 - The endpoint uses express-validator for input validation 
 
-#4 User Login API
+## User Login API
 
 ## Endpoint: `/users/login`
 
