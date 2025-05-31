@@ -4,7 +4,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import connectToDB from "./db/db.js";
-import userRoutes from "./routes/user.routes.js";
+import userRouter from "./routes/user.routes.js";
+import captainRouter from "./routes/captain.routes.js";
 import cookieParser from "cookie-parser";
 
 connectToDB();
@@ -20,6 +21,7 @@ app.get("/", (req,res) => {
     res.send("Hello World");
 })
 
-app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/captain",captainRouter);
 
 export default app;
