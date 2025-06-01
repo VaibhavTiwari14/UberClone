@@ -22,6 +22,6 @@ app.get("/", (req,res) => {
 })
 
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/captain",captainRouter);
+app.use("/api/v1/captains",captainRouter);
 
 export default app;

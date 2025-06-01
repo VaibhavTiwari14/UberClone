@@ -85,7 +85,7 @@ export const loginCaptain = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000
     });
 
     console.log("Captain Logged In!! Captain: "+captain.fullname.firstname);
@@ -105,16 +105,17 @@ export const loginCaptain = async (req, res) => {
 export const getCaptainProfile = async(req, res) => {
     return res
            .status(200)
-           .json(req.captain);
+           .json({
+            captain : req.captain
+           });
 }
 
 export const logoutCaptain = async(req, res) => {
-    res.clearCookie('token');
     const token = req.cookies.token || req.headers.authorization.split(" ")[1];
     await blacklistTokenModel.create({
         token
     });
-
+    res.clearCookie('token');
     res
     .status(200)
     .json({

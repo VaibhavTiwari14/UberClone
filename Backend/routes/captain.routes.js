@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import { registerCaptain, loginCaptain, getCaptainProfile, logoutCaptain } from "../controllers/captain.controller.js";
-import { authUser } from "../middlewares/auth.middleware.js";
+import { authCaptain } from "../middlewares/auth.middleware.js";
 
 const captainRouter = express.Router();
 
@@ -59,9 +59,9 @@ captainRouter.post("/login", [
 ], loginCaptain);
 
 // Get profile route (protected)
-captainRouter.get("/profile", authUser, getCaptainProfile);
+captainRouter.get("/profile", authCaptain, getCaptainProfile);
 
 // Logout route (protected)
-captainRouter.post("/logout", authUser, logoutCaptain);
+captainRouter.post("/logout", authCaptain, logoutCaptain);
 
 export default captainRouter;

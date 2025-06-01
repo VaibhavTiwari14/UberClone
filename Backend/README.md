@@ -302,7 +302,7 @@ This endpoint logs out the user by invalidating their current session token.
 ## Endpoint: `/captains/register`
 
 ### Description
-This endpoint allows captains to register a new account in the system. It validates the input data, checks for existing captains, and creates a new captain account if all validations pass.
+This endpoint allows captains (drivers) to register a new account in the system. It validates the input data, checks for existing captains, and creates a new captain account if all validations pass.
 
 ### Method
 `POST`
@@ -317,7 +317,7 @@ This endpoint allows captains to register a new account in the system. It valida
     "email": "john.doe@example.com",
     "password": "yourpassword",
     "vehicle": {
-        "color": "Red",
+        "color": "Black",
         "plate": "ABC123",
         "capacity": 4,
         "vehicleType": "car"
@@ -363,10 +363,8 @@ This endpoint allows captains to register a new account in the system. It valida
   - Must be one of: "car", "motorcycle", "auto"
 
 #### Location (optional)
-- **latitude**
-  - Must be a valid number
-- **longitude**
-  - Must be a valid number
+- **latitude**: Must be a valid number
+- **longitude**: Must be a valid number
 
 ### Response
 
@@ -381,12 +379,12 @@ This endpoint allows captains to register a new account in the system. It valida
         },
         "email": "john.doe@example.com",
         "vehicle": {
-            "color": "Red",
+            "color": "Black",
             "plate": "ABC123",
             "capacity": 4,
             "vehicleType": "car"
         },
-        "status": "inactive",
+        "status": "active",
         "token": "jwt_token"
     }
 }
@@ -469,12 +467,12 @@ This endpoint authenticates captains and provides them with a JWT token for subs
         },
         "email": "john.doe@example.com",
         "vehicle": {
-            "color": "Red",
+            "color": "Black",
             "plate": "ABC123",
             "capacity": 4,
             "vehicleType": "car"
         },
-        "status": "inactive"
+        "status": "active"
     }
 }
 ```
@@ -521,52 +519,55 @@ or
 ## Endpoint: `/captains/profile`
 
 ### Description
-This endpoint retrieves the authenticated captain's profile information.
+This endpoint retrieves the profile information of the authenticated captain.
 
 ### Method
 `GET`
 
 ### Headers
-- `Authorization`: Bearer token (required)
-- `Cookie`: token (optional, if using cookie-based authentication)
+- Authorization: Bearer token
 
 ### Response
 
 #### Success Response (200 OK)
 ```json
 {
-    "_id": "captain_id",
-    "fullname": {
-        "firstname": "John",
-        "lastname": "Doe"
-    },
-    "email": "john.doe@example.com",
-    "vehicle": {
-        "color": "Red",
-        "plate": "ABC123",
-        "capacity": 4,
-        "vehicleType": "car"
-    },
-    "status": "inactive",
-    "location": {
-        "latitude": 12.9716,
-        "longitude": 77.5946
+    "captain": {
+        "_id": "captain_id",
+        "fullname": {
+            "firstname": "John",
+            "lastname": "Doe"
+        },
+        "email": "john.doe@example.com",
+        "vehicle": {
+            "color": "Black",
+            "plate": "ABC123",
+            "capacity": 4,
+            "vehicleType": "car"
+        },
+        "status": "active"
     }
 }
 ```
 
 #### Error Responses
 
-1. **Authentication Error (401 Unauthorized)**
+1. **Unauthorized (401 Unauthorized)**
 ```json
 {
-    "message": "Unauthorized access - No token provided"
+    "message": "Unauthorized Captain access - No token provided"
+}
+```
+or
+```json
+{
+    "message": "Invalid Captain token"
 }
 ```
 
 ### Status Codes
 - `200`: Profile retrieved successfully
-- `401`: Unauthorized (invalid or missing token)
+- `401`: Unauthorized access
 - `500`: Internal server error
 
 ### Notes
@@ -578,14 +579,13 @@ This endpoint retrieves the authenticated captain's profile information.
 ## Endpoint: `/captains/logout`
 
 ### Description
-This endpoint logs out the captain by invalidating their current session token.
+This endpoint logs out the authenticated captain by invalidating their token.
 
 ### Method
 `POST`
 
 ### Headers
-- `Authorization`: Bearer token (required)
-- `Cookie`: token (optional, if using cookie-based authentication)
+- Authorization: Bearer token
 
 ### Response
 
@@ -598,20 +598,20 @@ This endpoint logs out the captain by invalidating their current session token.
 
 #### Error Responses
 
-1. **Authentication Error (401 Unauthorized)**
+1. **Unauthorized (401 Unauthorized)**
 ```json
 {
-    "message": "Unauthorized access - No token provided"
+    "message": "Unauthorized Captain access - No token provided"
 }
 ```
 
 ### Status Codes
 - `200`: Logout successful
-- `401`: Unauthorized (if no valid token provided)
+- `401`: Unauthorized access
 - `500`: Internal server error
 
 ### Notes
-- The endpoint clears the authentication cookie
-- The current token is blacklisted to prevent its reuse
-- Requires authentication (valid JWT token)
-- Token can be provided via Authorization header or cookie 
+- All protected endpoints require a valid JWT token
+- The token can be provided either in the Authorization header or as an HTTP-only cookie
+- Invalid or expired tokens will result in a 401 Unauthorized response
+- The captain's password is never returned in any response for security reasons 
