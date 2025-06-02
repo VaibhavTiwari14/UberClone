@@ -115,6 +115,7 @@ export const logoutCaptain = async(req, res) => {
     await blacklistTokenModel.create({
         token
     });
+    console.log("Captain Logged Out!! Captain: "+req.captain.fullname.firstname);
     res.clearCookie('token');
     res
     .status(200)
