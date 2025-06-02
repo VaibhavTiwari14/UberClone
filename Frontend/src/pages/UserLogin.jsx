@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Logo from "../components/Logo";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -56,10 +56,10 @@ const UserLogin = () => {
               </div>
 
               {/* Quick Access Buttons */}
-              <div className="flex justify-center mb-4">
+              <div className="flex justify-center mb-4 w-full">
                 <Link
                   to={!loading ? "/captain-login" : "#"}
-                  className={`flex items-center justify-center px-8 py-2.5 border-2 rounded-lg transition-all duration-200 group ${
+                  className={`flex items-center w-full justify-center px-8 py-2.5 border-2 rounded-lg transition-all duration-200 group ${
                     window.location.pathname === "/captain-login"
                       ? "bg-yellow-400 border-yellow-400 text-black"
                       : "bg-black/50 border-yellow-400 text-white hover:bg-yellow-400/20"
