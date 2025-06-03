@@ -1,29 +1,52 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CaptainContext } from "../context/CaptainContext";
+import axios from "axios";
+import LoadingScreen from "../components/LoadingScreen";
 
 const CaptainProtectedWrapper = ({ children }) => {
-  const { captain } = useContext(CaptainContext);
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const { setCaptain } = useContext(CaptainContext);
+  const [loading, isLoading] = useState(true);
 
   useEffect(() => {
-    if (!captain) {
+    if (!token) {
       navigate("/captain-login");
     }
-  }, [captain, navigate]);
+  }, [token, navigate]);
 
-  if (!captain) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+  useEffect(() => {
+    const fetchCaptainProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/captains/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setCaptain(response.data.captain);
+          isLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching captain profile:", error);
+        navigate("/captain-login");
+      }
+    };
+
+    if (token) {
+      fetchCaptainProfile();
+    }
+  }, [token, setCaptain, navigate]);
+
+  if (loading) {
+    return <LoadingScreen />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default CaptainProtectedWrapper;

@@ -8,9 +8,11 @@ import CaptainSignup from "./pages/CaptainSignup";
 import Home from "./pages/Home";
 import UserLogout from "./pages/UserLogout";
 import CaptainLogout from "./pages/CaptainLogout";
+import CaptainDashboard from "./pages/CaptainDashboard";
 
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
+
 
 const AppRoutes = () => {
   return (
@@ -53,7 +55,7 @@ const AppRoutes = () => {
         path="/captain-dashboard"
         element={
           <CaptainProtectedWrapper>
-            <div>Captain Dashboard (Coming Soon)</div>
+            <CaptainDashboard/>
           </CaptainProtectedWrapper>
         }
       />
