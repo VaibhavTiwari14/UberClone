@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import CaptainLogo from "../components/CaptainLogo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CaptainContext } from "../context/CaptainContext";
 
 const CaptainSignup = () => {
   const [formData, setFormData] = useState({
@@ -17,12 +18,15 @@ const CaptainSignup = () => {
       vehicleType: "",
     },
     location: {
-      latitude: "",
-      longitude: "",
+      latitude: 0,
+      longitude: 0,
     },
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const { register } = useContext(CaptainContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,14 +63,24 @@ const CaptainSignup = () => {
       formData.vehicle.vehicleType === "" ||
       confirmPassword === ""
     ) {
-      alert("Some fields are empty");
+      setError("Please fill in all fields");
       return;
     }
-    if (confirmPassword === formData.password) {
-      setLoading(true);
-      console.log(formData);
-    } else {
-      alert("password does not match");
+    if (confirmPassword !== formData.password) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await register(formData);
+      navigate("/captain-dashboard");
+    } catch (error) {
+      setError(error.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,6 +120,11 @@ const CaptainSignup = () => {
                       Sign In
                     </Link>
                   </p>
+                  {error && (
+                    <p className="mt-2 text-sm text-red-400 bg-red-900/30 p-2 rounded-lg">
+                      {error}
+                    </p>
+                  )}
                 </div>
 
                 {/* Personal Information */}

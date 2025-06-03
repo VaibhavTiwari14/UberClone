@@ -1,23 +1,58 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Logo from "../components/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
 
   const handleLogin = async () => {
     if (email === "" || password === "") {
-      alert("Some fields are empty");
+      setError("Please fill in all fields");
       return;
     }
     setLoading(true);
+    setError("");
     const loginData = {
       email: email,
       password: password,
     };
-    console.log(loginData);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/login`,
+        loginData
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(error.response.data.message || "Invalid email or password");
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError(
+          "No response from server. Please check your internet connection."
+        );
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("An error occurred. Please try again later.");
+      }
+      console.error("Login error:", error);
+    } finally {
+      setLoading(false);
+    }
+
     setEmail("");
     setPassword("");
   };
@@ -144,6 +179,11 @@ const UserLogin = () => {
 
               {/* Email/Password Form */}
               <div className="space-y-3">
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-500 text-sm p-3 rounded-lg">
+                    {error}
+                  </div>
+                )}
                 <div>
                   <label
                     htmlFor="email"

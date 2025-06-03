@@ -1,21 +1,24 @@
 import React, { createContext, useState } from "react";
+import { logout as authLogout } from "../utils/auth";
 
-export const UserDataContext = createContext();
+export const UserContext = createContext();
 
-const UserContext = ({ children }) => {
-  const [user, setUser] = useState({
-    fullname: {
-      firstname: "",
-      lastname: "",
-    },
-    email: "",
-  });
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  const handleLogout = async () => {
+    try {
+      await authLogout();
+      setUser(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setUser(null);
+    }
+  };
 
   return (
-    <div>
-      <UserDataContext.Provider>{children}</UserDataContext.Provider>
-    </div>
+    <UserContext.Provider value={{ user, setUser, logout: handleLogout }}>
+      {children}
+    </UserContext.Provider>
   );
 };
-
-export default UserContext;

@@ -1,24 +1,19 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import UserLogin from './pages/UserLogin'
-import UserSignup from './pages/UserSignup'
-import CaptainLogin from './pages/CaptainLogin'
-import CaptainSignup from './pages/CaptainSignup'
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { UserProvider } from "./context/UserContext";
+import { CaptainProvider } from "./context/CaptainContext";
+import AppRoutes from "./routes";
 
 const App = () => {
   return (
-    <div>
-      <Routes>
-        <Route path = '/' element = {<Home />} />
-        <Route path = '/user-login' element = {<UserLogin />} />
-        <Route path = '/signup' element = {<UserSignup />} />
-        <Route path = '/captain-login' element = {<CaptainLogin />} />
-        <Route path = '/captain-signup' element = {<CaptainSignup/>} />
+    <UserProvider>
+      <CaptainProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </CaptainProvider>
+    </UserProvider>
+  );
+};
 
-      </Routes>
-    </div>
-  )
-}
-
-export default App
+export default App;

@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import CaptainLogo from "../components/CaptainLogo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CaptainContext } from "../context/CaptainContext";
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useContext(CaptainContext);
 
   const handleLogin = async () => {
-    if(email === '' || password === ''){
-      alert("Some fields are empty");
+    if (email === "" || password === "") {
+      setError("Please fill in all fields");
       return;
     }
     setLoading(true);
-    const loginData = {
-      email: email,
-      password: password,
-    };
-    console.log(loginData);
-    setEmail("");
-    setPassword("");
+    setError("");
+
+    try {
+      await login(email, password);
+      navigate("/captain-dashboard");
+    } catch (error) {
+      setError(error.message || "Login failed. Please try again.");
+
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,13 +58,18 @@ const CaptainLogin = () => {
                 </h1>
                 <p className="text-sm text-gray-200">
                   New to Taxi-Go?{" "}
-                  <a
-                    href="/captain-signup"
+                  <Link
+                    to={loading ? "#" : "/captain-signup"}
                     className="text-yellow-400 hover:text-yellow-300 font-semibold transition-colors"
                   >
                     Start Your Journey
-                  </a>
+                  </Link>
                 </p>
+                {error && (
+                  <p className="mt-2 text-sm text-red-400 bg-red-900/30 p-2 rounded-lg">
+                    {error}
+                  </p>
+                )}
               </div>
 
               {/* Quick Access Buttons */}

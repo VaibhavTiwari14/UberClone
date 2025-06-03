@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Logo from "../components/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserContext } from "../context/UserContext.jsx";
 
 const UserSignup = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +14,12 @@ const UserSignup = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(UserContext);
 
   const passChange = (e) => {
     setConfirmPassword(e.target.value);
@@ -44,14 +51,48 @@ const UserSignup = () => {
       formData.password === "" ||
       confirmPassword === ""
     ) {
-      alert("Some fields are empty");
+      setError("Please fill in all fields");
       return;
     }
-    if (confirmPassword === formData.password) {
-      setLoading(true);
-      console.log(formData);
-    } else {
-      alert("password does not match");
+    if (confirmPassword !== formData.password) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        formData
+      );
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.user.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.data.errors) {
+          setError(error.response.data.errors[0].msg || "Registration failed");
+        } else {
+          setError(error.response.data.message || "Registration failed");
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError(
+          "No response from server. Please check your internet connection."
+        );
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("An error occurred. Please try again later.");
+      }
+      console.error("Signup error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +133,12 @@ const UserSignup = () => {
                     </Link>
                   </p>
                 </div>
+
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-500 text-sm p-3 rounded-lg">
+                    {error}
+                  </div>
+                )}
 
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-3">
