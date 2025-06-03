@@ -20,7 +20,7 @@ const UserLogin = () => {
 
   return (
     <div
-      className="h-screen bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen bg-cover bg-center bg-fixed bg-no-repeat relative"
       style={{
         backgroundImage: `url('/loginImg.jpg')`,
       }}
@@ -29,7 +29,7 @@ const UserLogin = () => {
       <div className="absolute inset-0 bg-black/30"></div>
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col lg:flex-row">
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
         {/* Left side - Login Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <div className="w-full max-w-md">
@@ -39,7 +39,7 @@ const UserLogin = () => {
             </div>
 
             {/* Login Form */}
-            <div className="space-y-4">
+            <div className="space-y-4 bg-black/30 backdrop-blur-md p-6 rounded-2xl border border-yellow-400/20">
               <div>
                 <h1 className="text-2xl font-bold text-white mb-1">
                   Welcome Back, Traveler!
@@ -153,7 +153,7 @@ const UserLogin = () => {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-gray-400 text-sm"
+                      className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-yellow-200/70 placeholder:text-xs placeholder:font-medium text-sm"
                       placeholder="your.email@example.com"
                     />
                     <svg
@@ -193,7 +193,7 @@ const UserLogin = () => {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-gray-400 text-sm"
+                      className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-yellow-200/70 placeholder:text-xs placeholder:font-medium text-sm"
                       placeholder="Enter your password"
                     />
                     <svg
