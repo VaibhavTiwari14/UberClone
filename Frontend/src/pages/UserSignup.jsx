@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const UserSignup = () => {
   const [formData, setFormData] = useState({
-    username: {
+    fullname: {
       firstname: "",
       lastname: "",
     },
@@ -23,8 +23,8 @@ const UserSignup = () => {
     if (name === "firstname" || name === "lastname") {
       setFormData({
         ...formData,
-        username: {
-          ...formData.username,
+        fullname: {
+          ...formData.fullname,
           [name]: value,
         },
       });
@@ -37,6 +37,16 @@ const UserSignup = () => {
   };
 
   const handleSignup = async () => {
+    if (
+      formData.fullname.firstname === "" ||
+      formData.fullname.lastname === "" ||
+      formData.email === "" ||
+      formData.password === "" ||
+      confirmPassword === ""
+    ) {
+      alert("Some fields are empty");
+      return;
+    }
     if (confirmPassword === formData.password) {
       setLoading(true);
       console.log(formData);
@@ -97,7 +107,7 @@ const UserSignup = () => {
                         id="firstname"
                         name="firstname"
                         type="text"
-                        value={formData.username.firstname}
+                        value={formData.fullname.firstname}
                         onChange={handleChange}
                         className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-yellow-200/70 placeholder:text-xs placeholder:font-medium text-sm"
                         placeholder="First-Name"
@@ -130,7 +140,7 @@ const UserSignup = () => {
                         id="lastname"
                         name="lastname"
                         type="text"
-                        value={formData.username.lastname}
+                        value={formData.fullname.lastname}
                         onChange={handleChange}
                         className="w-full px-3 pl-10 py-2 border border-yellow-400/30 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 bg-black/50 text-white placeholder-yellow-200/70 placeholder:text-xs placeholder:font-medium text-sm"
                         placeholder="Last-Name"

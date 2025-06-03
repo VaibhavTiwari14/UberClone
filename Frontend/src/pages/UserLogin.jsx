@@ -8,6 +8,10 @@ const UserLogin = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (email === "" || password === "") {
+      alert("Some fields are empty");
+      return;
+    }
     setLoading(true);
     const loginData = {
       email: email,
