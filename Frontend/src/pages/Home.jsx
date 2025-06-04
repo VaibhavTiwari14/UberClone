@@ -1,108 +1,151 @@
-import React from "react";
-import Navbar from "../components/Navbar";
+import React, { useState } from "react";
+import { User, MapPin, Clock } from "lucide-react";
+import Navbar from "../components/Navbar.jsx";
 
+// UserHome Component
 const Home = () => {
+  const locationArray = [];
+  const [activeTab, setActiveTab] = useState("ride");
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [selectedService, setSelectedService] = useState("For me");
+  const [showMap, setShowMap] = useState(false);
+
+  const handleSearch = () => {
+    if (pickupLocation && dropoffLocation) {
+      setShowMap(true);
+    }
+  };
+
+  const isSearchEnabled = pickupLocation && dropoffLocation;
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <Navbar />
-      <div className="flex flex-1">
-        {/* Left Sidebar */}
-        <div className="w-full md:w-1/3 lg:w-1/4 p-6 bg-white shadow-md">
-          <h2 className="text-xl font-bold mb-6 text-gray-800">Get a ride</h2>
-          <div className="space-y-4">
+    <div className="min-h-screen bg-gray-100">
+      {/* Navbar */}
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {/* Main Content */}
+      <div className="pt-16 flex h-screen">
+        {/* Left Sidebar - Ride Booking */}
+        <div
+          className={`${
+            showMap ? "w-80" : "w-full md:w-80"
+          } bg-white shadow-lg border-r border-gray-200 flex flex-col transition-all duration-300`}
+        >
+          {/* Header */}
+          <div className="p-6 border-b border-gray-200 flex justify-center items-center">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {activeTab === "ride" ? "Get a ride" : "Rent a car"}
+            </h2>
+          </div>
+
+          {/* Location Inputs */}
+          <div className="p-6 space-y-4">
             {/* Pickup Location */}
-            <div>
-              <label
-                htmlFor="pickup"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Pickup location
-              </label>
+            <div className="relative flex items-center">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+              </div>
               <input
                 type="text"
-                id="pickup"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
-                placeholder="Enter pickup location"
+                placeholder="Pickup location"
+                value={pickupLocation}
+                onChange={(e) => setPickupLocation(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
               />
             </div>
+
             {/* Dropoff Location */}
-            <div>
-              <label
-                htmlFor="dropoff"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Dropoff location
-              </label>
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  id="dropoff"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
-                  placeholder="Enter dropoff location"
-                />
-                <button className="ml-2 p-2 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                </button>
+            <div className="relative flex items-center">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <div className="w-3 h-3 bg-black rounded-sm"></div>
               </div>
+              <input
+                type="text"
+                placeholder="Dropoff location"
+                value={dropoffLocation}
+                onChange={(e) => setDropoffLocation(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              />
+              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <MapPin className="w-5 h-5" />
+              </button>
             </div>
-            {/* Pickup Time */}
-            <div>
-              <label
-                htmlFor="pickup-time"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Pickup time
-              </label>
+          </div>
+
+          {/* Time Selection */}
+          <div className="px-6 pb-4">
+            <button className="flex items-center space-x-2 text-gray-700 hover:text-black">
+              <Clock className="w-5 h-5" />
+              <span className="font-medium">Pickup now</span>
+            </button>
+          </div>
+
+          {/* Service Selection */}
+          <div className="px-6 pb-6">
+            <div className="flex items-center space-x-2">
+              <User className="w-5 h-5 text-gray-700" />
               <select
-                id="pickup-time"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
-              >
-                <option>Pickup now</option>
-                <option>Schedule for later</option>
-              </select>
-            </div>
-            {/* For Me/Someone Else */}
-            <div>
-              <label
-                htmlFor="passenger"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                For
-              </label>
-              <select
-                id="passenger"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+                className="bg-transparent border-none focus:outline-none font-medium text-gray-700"
               >
                 <option>For me</option>
                 <option>For someone else</option>
               </select>
             </div>
           </div>
+
           {/* Search Button */}
-          <button className="mt-6 w-full px-4 py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500">
-            Search
-          </button>
-        </div>
-        {/* Right Map Area */}
-        <div className="flex-1 bg-gray-200">
-          {/* Map Placeholder */}
-          <div className="w-full h-full flex items-center justify-center text-gray-500">
-            Map Area
+          <div className="px-6 pb-6 flex justify-center">
+            <button
+              onClick={handleSearch}
+              className={`w-full max-w-xs py-3 rounded-lg font-medium transition-all duration-200 ${
+                isSearchEnabled
+                  ? "bg-black text-white hover:bg-gray-800 cursor-pointer"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              Search
+            </button>
+          </div>
+
+          {/* Recent Locations */}
+          <div className="flex-1 px-6 pb-6 overflow-y-auto">
+            <h3 className="font-medium text-gray-900 mb-4">
+              Recent destinations
+            </h3>
+            <div className="space-y-3">
+              {locationArray.length > 0 ? (
+                locationArray.map((location, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer"
+                  >
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        {location.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {location.address}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-gray-500">No recent locations</div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Right Side - Map Area */}
+        {showMap && (
+          <div className="hidden md:flex flex-1 bg-gray-100 items-center justify-center">
+            {/* Map will be implemented here */}
+            <div className="text-gray-500">Map Area</div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ import CaptainDashboard from "./pages/CaptainDashboard";
 import UserProtectedWrapper from "./pages/UserProtectedWrapper";
 import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
 
-
 const AppRoutes = () => {
   return (
     <Routes>
@@ -26,7 +25,7 @@ const AppRoutes = () => {
 
       {/* Protected User Routes */}
       <Route
-        path="/home"
+        path="/user/home"
         element={
           <UserProtectedWrapper>
             <Home />
@@ -55,7 +54,7 @@ const AppRoutes = () => {
         path="/captain-dashboard"
         element={
           <CaptainProtectedWrapper>
-            <CaptainDashboard/>
+            <CaptainDashboard />
           </CaptainProtectedWrapper>
         }
       />

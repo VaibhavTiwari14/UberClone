@@ -70,7 +70,7 @@ const UserSignup = () => {
         const data = response.data;
         setUser(data.user);
         localStorage.setItem("token", data.user.token);
-        navigate("/home");
+        navigate("/user/home");
       }
     } catch (error) {
       if (error.response) {
